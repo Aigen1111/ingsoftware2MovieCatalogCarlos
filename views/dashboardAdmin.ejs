@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-8">
+    <nav class="bg-white p-4 rounded shadow mb-6">
+      <ul class="flex space-x-4">
+        <li><a href="/admin/dashboard" class="text-blue-500">Dashboard</a></li>
+        <li><a href="/admin/movies" class="text-blue-500">Películas Existentes</a></li>
+      </ul>
+    </nav>
+    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+    
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Estadísticas Generales</h2>
+      <p>Total de Películas: <%= totalMovies %></p>
+      <h3 class="text-xl font-bold mt-4">Películas Mejor Puntuadas</h3>
+      <ul class="list-disc pl-5">
+        <% topRatedMovies.forEach(movie => { %>
+          <li><%= movie.title %> - <%= movie.ratings.length %> ratings</li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Gestión de Usuarios</h2>
+      <ul class="list-disc pl-5">
+        <% users.forEach(user => { %>
+          <li>
+            <%= user.username %> - <%= user.email %>
+            <form action="/admin/users/<%= user._id %>/delete" method="POST" class="inline">
+              <button type="submit" class="text-red-500 ml-2">Eliminar</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Gestión de Reseñas</h2>
+      <ul class="list-disc pl-5">
+        <% reviews.forEach(review => { %>
+          <li>
+            <%= review.user.username %> sobre <%= review.movie.title %>: <%= review.comment %>
+            <form action="/admin/reviews/<%= review._id %>/delete" method="POST" class="inline">
+              <button type="submit" class="text-red-500 ml-2">Eliminar</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Gestión de Películas</h2>
+      <form action="/admin/movies/add" method="POST" class="mb-4">
+        <h3 class="text-xl font-bold mb-2">Agregar Nueva Película</h3>
+        <div class="mb-2">
+          <label for="title" class="block text-gray-700">Título:</label>
+          <input type="text" id="title" name="title" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+        <div class="mb-2">
+          <label for="director" class="block text-gray-700">Director:</label>
+          <input type="text" id="director" name="director" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+        <div class="mb-2">
+          <label for="releaseYear" class="block text-gray-700">Año de Estreno:</label>
+          <input type="number" id="releaseYear" name="releaseYear" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+        <div class="mb-2">
+          <label for="genre" class="block text-gray-700">Género:</label>
+          <input type="text" id="genre" name="genre" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+        <div class="mb-2">
+          <label for="synopsis" class="block text-gray-700">Sinopsis:</label>
+          <textarea id="synopsis" name="synopsis" class="w-full p-2 border border-gray-300 rounded mt-1" required></textarea>
+        </div>
+        <div class="mb-2">
+          <label for="duration" class="block text-gray-700">Duración (minutos):</label>
+          <input type="number" id="duration" name="duration" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+        <div class="mb-2">
+          <label for="coverImage" class="block text-gray-700">URL de la Imagen de Portada:</label>
+          <input type="text" id="coverImage" name="coverImage" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded mt-4">Agregar Película</button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>
