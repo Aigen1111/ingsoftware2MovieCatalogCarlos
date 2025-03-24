@@ -7,7 +7,7 @@ const connectFlash = require('connect-flash');
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const userRoutes = require('./routes/userRoutes'); // Importa las rutas del usuario
+const userRoutes = require('./routes/userRoutes'); 
 const { ensureAuthenticated, ensureAdmin } = require('./middleware/authMiddleware');
 const cors = require('cors');
 require('dotenv').config();
