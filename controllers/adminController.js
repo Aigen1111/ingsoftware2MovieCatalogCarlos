@@ -79,7 +79,7 @@ exports.deleteReview = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.redirect('/admin/dashboard');
+    res.redirect('/admin/users');
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
@@ -93,5 +93,61 @@ exports.getMovies = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.render('users', { title: 'Gestión de Usuarios', users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find().populate('user').populate('movie');
+    res.render('reviews', { title: 'Gestión de Reseñas', reviews });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getRatings = async (req, res) => {
+  try {
+    const ratings = await Rating.find().populate('user').populate('movie');
+    res.render('ratings', { title: 'Gestión de Ratings', ratings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+};
+
+
+
+exports.getEditUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).send('Usuario no encontrado');
+    }
+    res.render('editUser', { title: 'Editar Usuario', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error del servidor');
+  }
+};
+
+exports.editUser = async (req, res) => {
+  const { username, email, role } = req.body;
+  try {
+    await User.findByIdAndUpdate(req.params.id, { username, email, role });
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error del servidor');
   }
 };

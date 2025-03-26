@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Película</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6">Agregar Película</h1>
+    <form action="/admin/movies/add" method="POST" class="bg-white p-6 rounded shadow">
+      <div class="mb-4">
+        <label for="title" class="block text-sm font-bold mb-2">Título</label>
+        <input type="text" id="title" name="title" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="director" class="block text-sm font-bold mb-2">Director</label>
+        <input type="text" id="director" name="director" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="releaseYear" class="block text-sm font-bold mb-2">Año de Estreno</label>
+        <input type="number" id="releaseYear" name="releaseYear" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="genre" class="block text-sm font-bold mb-2">Género</label>
+        <input type="text" id="genre" name="genre" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="synopsis" class="block text-sm font-bold mb-2">Sinopsis</label>
+        <textarea id="synopsis" name="synopsis" class="w-full p-2 border rounded" required></textarea>
+      </div>
+      <div class="mb-4">
+        <label for="duration" class="block text-sm font-bold mb-2">Duración (minutos)</label>
+        <input type="number" id="duration" name="duration" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="coverImage" class="block text-sm font-bold mb-2">URL de la Imagen de Portada</label>
+        <input type="text" id="coverImage" name="coverImage" class="w-full p-2 border rounded" required>
+      </div>
+      <button type="submit" class="bg-blue-500 text-white p-2 rounded">Agregar</button>
+    </form>
+  </div>
+</body>
+</html>
