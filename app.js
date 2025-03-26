@@ -7,7 +7,7 @@ const connectFlash = require('connect-flash');
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const userRoutes = require('./routes/userRoutes'); // Importa las rutas del usuario
+const userRoutes = require('./routes/userRoutes'); 
 const { ensureAuthenticated, ensureAdmin } = require('./middleware/authMiddleware');
 const cors = require('cors');
 require('dotenv').config();
@@ -19,21 +19,28 @@ const app = express();
 connectDB();
 // Configura CORS
 app.use(cors({
-  origin: 'http://localhost:8080', // Permite solicitudes desde el frontend
+  origin: 'http://localhost:8080', // Cambia esto al puerto del frontend
   credentials: true, // Permite el envío de cookies
 }));
 // Configuración de EJS
 app.use(expressLayouts);
+app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('layout', 'layout'); // Configurar el layout por defecto
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: 'secret',
-  resave: true,
-  saveUninitialized: true,
+  secret: 'your_secret_key', 
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false, // Cambia a true si usas HTTPS
+    maxAge: 1000 * 60 * 60 * 24, // 1 día
+  },
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(connectFlash());
@@ -50,7 +57,8 @@ app.use((req, res, next) => {
 // Rutas
 app.use('/', authRoutes);
 app.use('/', adminRoutes);
-app.use('/', userRoutes); // Usa las rutas del usuario
+app.use('/', userRoutes);
+app.use('/images', express.static('images'));
 app.get('/', (req, res) => res.render('index', { title: 'Inicio' }));
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
   if (req.user.role === 'admin') {

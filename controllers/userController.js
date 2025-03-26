@@ -34,15 +34,27 @@ exports.getFavoritesJSON = async (req, res) => {
 };
 
 exports.toggleFavoriteJSON = async (req, res) => {
+  console.log('Request body:', req.body); 
   const { movieId } = req.body;
   try {
     const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      return res.status(404).json({ error: 'Movie not found' });
+    }
+
     if (user.favorites.includes(movieId)) {
       user.favorites = user.favorites.filter(fav => fav.toString() !== movieId);
     } else {
       user.favorites.push(movieId);
     }
+
     await user.save();
+    console.log('Updated favorites:', user.favorites); 
     res.json({ favorites: user.favorites });
   } catch (error) {
     console.error(error);
@@ -61,10 +73,26 @@ exports.getReviewsJSON = async (req, res) => {
 };
 
 exports.addReviewJSON = async (req, res) => {
+  console.log('Request body:', req.body); // Verifica el contenido del cuerpo de la solicitud
   const { movieId, comment } = req.body;
   try {
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      return res.status(404).json({ error: 'Movie not found' });
+    }
+
     const review = new Review({ user: req.user.id, movie: movieId, comment });
     await review.save();
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.reviews.push(review._id); // Añade el ID de la reseña al array del usuario
+    await user.save();
+
+    console.log('Updated reviews:', user.reviews); // Verifica el array actualizado
     res.json({ review });
   } catch (error) {
     console.error(error);
@@ -101,6 +129,30 @@ exports.getDashboardJSON = async (req, res) => {
     res.json({ user, movies });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
+
+exports.removeFavoriteJSON = async (req, res) => {
+  console.log('Request body:', req.body);
+  const { movieId } = req.body;
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      console.error('User not found');
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+
+    user.favorites = user.favorites.filter(fav => fav !== null && fav.toString() !== movieId);
+
+    console.log('Removing favorite:', movieId);
+    await user.save();
+
+    console.log('Updated favorites:', user.favorites);
+    res.json({ favorites: user.favorites });
+  } catch (error) {
+    console.error('Error in removeFavoriteJSON:', error);
     res.status(500).json({ error: 'Server Error' });
   }
 };
